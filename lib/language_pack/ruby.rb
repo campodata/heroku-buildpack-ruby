@@ -115,8 +115,7 @@ private
     paths         = [
       ENV["PATH"],
       "bin",
-      system_paths,
-      "vendor/#{PHANTOMJS_VENDOR_PATH}/bin"
+      system_paths
     ]
     paths.unshift("#{slug_vendor_jvm}/bin") if ruby_version.jruby?
     paths.unshift(safe_binstubs)
@@ -873,9 +872,14 @@ params = CGI.parse(uri.query || "")
   end
 
   def install_phantomjs
-    dir = File.join('vendor')
-    Dir.chdir(dir) do
+    vendor = File.join('vendor')
+    Dir.chdir(vendor) do
       run("curl #{PHANTOMJS_URL} -s -o - | tar xzf -")
+    end
+
+    bin_dir = File.join('bin')
+    Dir.chdir(bin_dir) do
+      run("ln -s ../#{vendor}/#{PHANTOMJS_VENDOR_PATH}/bin/phantomjs .")
     end
   end
 end
