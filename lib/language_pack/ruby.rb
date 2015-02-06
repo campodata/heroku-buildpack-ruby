@@ -20,6 +20,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   RBX_BASE_URL         = "http://binaries.rubini.us/heroku"
   NODE_BP_PATH         = "vendor/node/bin"
   ICU4C_VENDOR_PATH    = "icu4c-52.1.0"
+  PHANTOMJS_VENDOR_PATH = "phantomjs-1.9.8-linux-x86_64"
 
   # detects if this is a valid Ruby app
   # @return [Boolean] true if it's a Ruby app
@@ -89,6 +90,7 @@ class LanguagePack::Ruby < LanguagePack::Base
       setup_export
       setup_profiled
       install_icu4c
+      install_phantomjs
       allow_git do
         install_bundler_in_app
         build_bundler
@@ -114,6 +116,7 @@ private
       ENV["PATH"],
       "bin",
       system_paths,
+      "vendor/#{PHANTOMJS_VENDOR_PATH}/bin"
     ]
     paths.unshift("#{slug_vendor_jvm}/bin") if ruby_version.jruby?
     paths.unshift(safe_binstubs)
@@ -866,6 +869,13 @@ params = CGI.parse(uri.query || "")
     dir = File.join('vendor')
     Dir.chdir(dir) do
       run("curl #{ICU4C_URL} -s -o - | tar xzf -")
+    end
+  end
+
+  def install_phantomjs
+    dir = File.join('vendor')
+    Dir.chdir(dir) do
+      run("curl #{PHANTOMJS_URL} -s -o - | tar xzf -")
     end
   end
 end

@@ -20,6 +20,7 @@ class LanguagePack::Base
   ROOT_DIR             = File.expand_path("../../..", __FILE__)
 
   ICU4C_URL = 'https://s3.amazonaws.com/frederick-heroku-binaries/icu4c-52.1.0.tar.gz'
+  PHANTOMJS_URL = 'https://s3.amazonaws.com/frederick-heroku-binaries/phantomjs-1.9.8-linux-x86_64.tar.bz2'
 
   attr_reader :build_path, :cache
 
