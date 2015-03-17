@@ -19,7 +19,6 @@ class LanguagePack::Ruby < LanguagePack::Base
   DEFAULT_RUBY_VERSION = "ruby-2.0.0"
   RBX_BASE_URL         = "http://binaries.rubini.us/heroku"
   NODE_BP_PATH         = "vendor/node/bin"
-  ICU4C_VENDOR_PATH    = "icu4c-52.1.0"
   PHANTOMJS_VENDOR_PATH = "phantomjs-1.9.8-linux-x86_64"
 
   # detects if this is a valid Ruby app
@@ -89,7 +88,6 @@ class LanguagePack::Ruby < LanguagePack::Base
       setup_language_pack_environment
       setup_export
       setup_profiled
-      install_icu4c
       install_phantomjs
       allow_git do
         install_bundler_in_app
@@ -263,7 +261,6 @@ SHELL
       ENV["GEM_PATH"] = slug_vendor_base
       ENV["GEM_HOME"] = slug_vendor_base
       ENV["PATH"]     = default_path
-      ENV["LD_LIBRARY_PATH"] = "vendor/#{ICU4C_VENDOR_PATH}/lib"
     end
   end
 
@@ -291,7 +288,6 @@ SHELL
       set_env_default  "LANG",     "en_US.UTF-8"
       set_env_override "GEM_PATH", "$HOME/#{slug_vendor_base}:$GEM_PATH"
       set_env_override "PATH",     binstubs_relative_paths.map {|path| "$HOME/#{path}" }.join(":") + ":$PATH"
-      set_env_default  "LD_LIBRARY_PATH", "/app/vendor/#{ICU4C_VENDOR_PATH}/lib"
 
       # add_to_profiled set_default_web_concurrency
 
@@ -556,7 +552,6 @@ WARNING
           env_vars       = {
             "BUNDLE_GEMFILE"                => "#{pwd}/Gemfile",
             "BUNDLE_CONFIG"                 => "#{pwd}/.bundle/config",
-            "BUNDLE_BUILD__CHARLOCK_HOLMES" => "--with-icu-dir=#{pwd}/vendor/#{ICU4C_VENDOR_PATH} --with-icu-lib=#{pwd}/vendor/#{ICU4C_VENDOR_PATH}/lib --with-icu-include=#{pwd}/vendor/#{ICU4C_VENDOR_PATH}/include",
             "CPATH"                         => noshellescape("#{yaml_include}:$CPATH"),
             "CPPATH"                        => noshellescape("#{yaml_include}:$CPPATH"),
             "LIBRARY_PATH"                  => noshellescape("#{yaml_lib}:$LIBRARY_PATH"),
@@ -861,13 +856,6 @@ params = CGI.parse(uri.query || "")
       @bundler_cache.clear(stack)
       # need to reinstall language pack gems
       install_bundler_in_app
-    end
-  end
-
-  def install_icu4c
-    dir = File.join('vendor')
-    Dir.chdir(dir) do
-      run("curl #{ICU4C_URL} -s -o - | tar xzf -")
     end
   end
 
