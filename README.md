@@ -3,6 +3,8 @@
 
 This is a [Heroku Buildpack](http://devcenter.heroku.com/articles/buildpacks) for Ruby, Rack, and Rails apps. It uses [Bundler](http://gembundler.com) for dependency management.
 
+This buildpack requires 64-bit Linux.
+
 ## Usage
 
 ### Ruby
@@ -169,4 +171,4 @@ If you don't want to run them in parallel you can still:
 $ bundle exec rake spec
 ```
 
-Now go take a nap or something for a really long time.
+Now go take a nap or do something for a really long time.
